@@ -71,7 +71,7 @@ if __name__=="__main__":
 	#         print(len(np.where(sample_batch["label_img"][i]==1)[0]))
 	#     prob = model(sample_batch["img"])
 	#     print(prob.size())
-		matplotlib.image.imsave("./test_dir/"+str(i)+"_weight_img.png",sample_batch["weight_img"][0])
+		matplotlib.image.imsave("./test_dir/"+str(counter)+"_weight_img.png",sample_batch["weight_img"][0])
 		counter += 1
 		if counter>=20:
 			break
