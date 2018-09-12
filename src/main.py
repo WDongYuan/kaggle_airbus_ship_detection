@@ -59,10 +59,10 @@ if __name__=="__main__":
 
 	counter = 0
 	for i_batch, sample_batch in enumerate(train_dataloader):
-	    fig, axarr = plt.subplots(batch_size, 3)
+		fig, axarr = plt.subplots(batch_size, 3)
 	#     print(axarr.shape)
-	    for i in range(batch_size):
-	        rnd_num = np.random.randint(0,len(transform_list))
+		for i in range(batch_size):
+			rnd_num = np.random.randint(0,len(transform_list))
 	#         axarr[i,0].imshow(to_pil(sample_batch["img"][i]))
 	#         axarr[i,1].imshow(sample_batch["label_img"][i])
 	#         axarr[i,2].imshow(sample_batch["weight_img"][i])
@@ -72,6 +72,6 @@ if __name__=="__main__":
 	#     prob = model(sample_batch["img"])
 	#     print(prob.size())
 		matplotlib.image.imsave("./test_dir/"+str(i)+"_weight_img.png",sample_batch["weight_img"][0])
-	    counter += 1
-	    if counter>=20:
-	        break
+		counter += 1
+		if counter>=20:
+			break
