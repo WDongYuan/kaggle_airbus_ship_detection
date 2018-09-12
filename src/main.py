@@ -73,5 +73,5 @@ if __name__=="__main__":
 	#     prob = model(sample_batch["img"])
 	#     print(prob.size())
 	    counter += 1
-	    if counter>=10:
+	    if counter>=20:
 	        break
