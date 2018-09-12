@@ -2,6 +2,7 @@ import os
 import numpy as np
 from torchvision import transforms, utils
 from PIL import Image
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
 class ImageData:
     def __init__(self, img_dir, label_file, transform_list=None, label_transform_list=None):
