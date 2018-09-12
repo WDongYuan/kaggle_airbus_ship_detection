@@ -41,12 +41,16 @@ if __name__=="__main__":
 
 	to_pil = transforms.ToPILImage(mode=None)
 
+
+
+	
+
 	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
 
 	valid_ids = np.random.choice(len(dataset),int(len(dataset)*valid_ratio))
 	train_ids = np.setdiff1d(np.arange(len(dataset)),valid_ids)
-	print(train_ids.shape)
-	print(valid_ids.shape)
+	# print(train_ids.shape)
+	# print(valid_ids.shape)
 
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
