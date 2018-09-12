@@ -13,9 +13,9 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms, utils
 from PIL import Image
 
-import data_processing
-import model
-import util
+from data_processing import *
+from model import *
+from util import *
 
 if __name__=="__main__":
 	transform_list = []
