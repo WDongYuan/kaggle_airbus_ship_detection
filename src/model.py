@@ -1,3 +1,6 @@
+import torch
+import torch.nn as nn
+
 class DownBlock(nn.Module):
     def __init__(self, in_ch, out_ch, max_pool_flag=True):
         super(DownBlock,self).__init__()
