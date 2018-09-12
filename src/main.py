@@ -43,7 +43,7 @@ if __name__=="__main__":
 
 
 
-	
+
 
 	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
 
@@ -59,22 +59,19 @@ if __name__=="__main__":
 
 	counter = 0
 	for i_batch, sample_batch in enumerate(train_dataloader):
-	#     fig, axarr = plt.subplots(batch_size, 3)
-	    fig, axarr = plt.subplots()
+	    fig, axarr = plt.subplots(batch_size, 3)
 	#     print(axarr.shape)
 	    for i in range(batch_size):
 	        rnd_num = np.random.randint(0,len(transform_list))
 	#         axarr[i,0].imshow(to_pil(sample_batch["img"][i]))
 	#         axarr[i,1].imshow(sample_batch["label_img"][i])
 	#         axarr[i,2].imshow(sample_batch["weight_img"][i])
-
-	        axarr.imshow(sample_batch["weight_img"][i])
 	        
-	#         matplotlib.image.imsave("../input/"+str(i)+"_weight_img.png",sample_batch["weight_img"][i])
+	        matplotlib.image.imsave("./test_dir/"+str(i)+"_weight_img.png",sample_batch["weight_img"][i])
 	#         print(len(np.where(sample_batch["label_img"][i]>0)[0]))
 	#         print(len(np.where(sample_batch["label_img"][i]==1)[0]))
 	#     prob = model(sample_batch["img"])
 	#     print(prob.size())
 	    counter += 1
-	    if counter>=5:
+	    if counter>=10:
 	        break
