@@ -66,12 +66,12 @@ if __name__=="__main__":
 	#         axarr[i,0].imshow(to_pil(sample_batch["img"][i]))
 	#         axarr[i,1].imshow(sample_batch["label_img"][i])
 	#         axarr[i,2].imshow(sample_batch["weight_img"][i])
-	        
-	        matplotlib.image.imsave("./test_dir/"+str(i)+"_weight_img.png",sample_batch["weight_img"][i])
+
 	#         print(len(np.where(sample_batch["label_img"][i]>0)[0]))
 	#         print(len(np.where(sample_batch["label_img"][i]==1)[0]))
 	#     prob = model(sample_batch["img"])
 	#     print(prob.size())
+		matplotlib.image.imsave("./test_dir/"+str(i)+"_weight_img.png",sample_batch["weight_img"][0])
 	    counter += 1
 	    if counter>=20:
 	        break
