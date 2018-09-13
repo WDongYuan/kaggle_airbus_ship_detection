@@ -29,10 +29,10 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 		print("epoch "+str(epoch))
 		loss_mean = 0
 		batch_count = 0
-		start_time = time.time()
+		# start_time = time.time()
 		for i_batch, sample_batch in enumerate(train_dataloader):
-			print(time.time()-start_time)
-			start_time = time.time()
+			# print(time.time()-start_time)
+			# start_time = time.time()
 
 			optimizer.zero_grad()
 			log_prob = model(sample_batch["img"].cuda())
@@ -41,14 +41,15 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			weight_log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			loss_mean += loss.mean()
+			print(loss.mean()),
 			loss.backward()
 			optimizer.step()
 
-			print(time.time()-start_time)
-			print("############################")
+			# print(time.time()-start_time)
+			# print("############################")
 
 			batch_count += 1
-			start_time = time.time()
+			# start_time = time.time()
 		print(loss_mean/batch_count)
 
 	
