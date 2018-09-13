@@ -23,7 +23,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 
 	model.cuda()
 
-	loss_func = nn.NLLLoss()
+	loss_func = nn.NLLLoss(reduction=False)
 	for epoch in range(total_epoch):
 		print("##################################")
 		print("epoch "+str(epoch))
@@ -41,7 +41,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			weight_log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			loss_mean += loss.mean()
-			print(str(loss.mean().data.cpu().numpy())+"("+str((batch_count+1)*batch_size)+")", end=" ", flush=True)
+			print("%f,%f(%d)"%(loss.mean().data.cpu().numpy(),(batch_count+1)*batch_size), end=" ", flush=True)
 			loss.backward()
 			optimizer.step()
 
