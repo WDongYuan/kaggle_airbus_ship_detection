@@ -17,16 +17,25 @@ from data_processing import *
 from model import *
 from util import *
 
-def TrainModel(model, optimizer, learning_rate, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch):
-	loss_func = nn.NLLLoss(reduction="none")
+def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch):
+	loss_func = nn.NLLLoss()
 	for epoch in range(total_epoch):
+		print("##################################")
+		print("epoch "+str(epoch))
+		loss_mean = 0
+		batch_count = 0
 		for i_batch, sample_batch in enumerate(train_dataloader):
 			optimizer.zero_grad()
 			log_prob = model(sample_batch["img"])
 			weight_log_prob = torch.multiply(log_prob,sample_batch["weight_img"])
 			loss = loss_func(log_prob,sample_batch["label_img"].unsqueeze(1))
+			loss_mean += loss.mean()
 			loss.backward()
 			optimizer.step()
+
+			batch_count += 1
+		print(loss_mean/batch_count)
+
 	
 if __name__=="__main__":
 	transform_list = []
@@ -67,22 +76,30 @@ if __name__=="__main__":
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
 
 	model = UNET()
+	optimizer = optim.Adam(model.parameters(),lr = 0.0001)
+	TrainModel(model,
+		optimizer,
+		train_dataloader,
+		valid_dataloader,
+		decay_step = 0,
+		decay_rate = 0,
+		total_epoch = 10)
 
-	counter = 0
-	for i_batch, sample_batch in enumerate(train_dataloader):
-		fig, axarr = plt.subplots(batch_size, 3)
-	#     print(axarr.shape)
-		for i in range(batch_size):
-			rnd_num = np.random.randint(0,len(transform_list))
-	#         axarr[i,0].imshow(to_pil(sample_batch["img"][i]))
-	#         axarr[i,1].imshow(sample_batch["label_img"][i])
-	#         axarr[i,2].imshow(sample_batch["weight_img"][i])
+	# counter = 0
+	# for i_batch, sample_batch in enumerate(train_dataloader):
+	# 	fig, axarr = plt.subplots(batch_size, 3)
+	# #     print(axarr.shape)
+	# 	for i in range(batch_size):
+	# 		rnd_num = np.random.randint(0,len(transform_list))
+	# #         axarr[i,0].imshow(to_pil(sample_batch["img"][i]))
+	# #         axarr[i,1].imshow(sample_batch["label_img"][i])
+	# #         axarr[i,2].imshow(sample_batch["weight_img"][i])
 
-	#         print(len(np.where(sample_batch["label_img"][i]>0)[0]))
-	#         print(len(np.where(sample_batch["label_img"][i]==1)[0]))
-	#     prob = model(sample_batch["img"])
-	#     print(prob.size())
-		matplotlib.image.imsave("./test_dir/"+str(counter)+"_weight_img.png",sample_batch["weight_img"][0])
-		counter += 1
-		if counter>=20:
-			break
+	# #         print(len(np.where(sample_batch["label_img"][i]>0)[0]))
+	# #         print(len(np.where(sample_batch["label_img"][i]==1)[0]))
+	# #     prob = model(sample_batch["img"])
+	# #     print(prob.size())
+	# 	matplotlib.image.imsave("./test_dir/"+str(counter)+"_weight_img.png",sample_batch["weight_img"][0])
+	# 	counter += 1
+	# 	if counter>=20:
+	# 		break

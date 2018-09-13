@@ -53,7 +53,7 @@ class UNET(nn.Module):
         self.u_block4 = UpBlock(self.base_ch*2,self.base_ch*1,self.base_ch*1)
         
         self.last_conv = nn.Conv2d(self.base_ch,2,3,padding=1)
-        self.softmax = nn.Softmax(dim=1)
+        self.log_softmax = nn.LogSoftmax(dim=1)
         
     def forward(self,img_data):
         img_down1 = self.d_block1(img_data)
@@ -72,6 +72,6 @@ class UNET(nn.Module):
         img_up4 = self.u_block4(img_up3,img_down1)
         
         img_last = self.last_conv(img_up4)
-        img_last = self.softmax(img_last)
+        img_last = self.log_softmax(img_last)
         
         return img_last
