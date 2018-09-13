@@ -17,6 +17,17 @@ from data_processing import *
 from model import *
 from util import *
 
+def TrainModel(model, optimizer, learning_rate, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch):
+	loss_func = nn.NLLLoss(reduction="none")
+	for epoch in range(total_epoch):
+		for i_batch, sample_batch in enumerate(train_dataloader):
+			optimizer.zero_grad()
+			log_prob = model(sample_batch["img"])
+			weight_log_prob = torch.multiply(log_prob,sample_batch["weight_img"])
+			loss = loss_func(log_prob,sample_batch["label_img"].unsqueeze(1))
+			loss.backward()
+			optimizer.step()
+	
 if __name__=="__main__":
 	transform_list = []
 	label_transform_list = []
