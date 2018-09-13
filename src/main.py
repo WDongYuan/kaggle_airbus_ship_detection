@@ -23,7 +23,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 
 	model.cuda()
 
-	loss_func = nn.NLLLoss(reduction=False)
+	loss_func = nn.NLLLoss(reduction="none")
 	for epoch in range(total_epoch):
 		print("##################################")
 		print("epoch "+str(epoch))
