@@ -31,7 +31,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			print(log_prob.size())
 			print(sample_batch["weight_img"].size())
 			weight_log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float())
-			loss = loss_func(log_prob,sample_batch["label_img"].unsqueeze(1).long())
+			loss = loss_func(log_prob,sample_batch["label_img"].long())
 			loss_mean += loss.mean()
 			loss.backward()
 			optimizer.step()
