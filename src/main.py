@@ -43,7 +43,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			loss_mean += loss.mean()
 			loss.backward()
 			optimizer.step()
-			
+
 			print(time.time()-start_time)
 			print("############################")
 
@@ -80,7 +80,8 @@ if __name__=="__main__":
 
 
 
-	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
+	# dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
+	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=None)
 
 	valid_ids = np.random.choice(len(dataset),int(len(dataset)*valid_ratio))
 	train_ids = np.setdiff1d(np.arange(len(dataset)),valid_ids)
