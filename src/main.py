@@ -13,6 +13,7 @@ from torch.utils.data import Dataset, DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms, utils
 from PIL import Image
+import time
 
 from data_processing import *
 from model import *
@@ -28,7 +29,11 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 		print("epoch "+str(epoch))
 		loss_mean = 0
 		batch_count = 0
+		start_time = time.time()
 		for i_batch, sample_batch in enumerate(train_dataloader):
+			print(time.time()-start_time)
+			start_time = time.time()
+
 			optimizer.zero_grad()
 			log_prob = model(sample_batch["img"].cuda())
 			print(log_prob.size())
@@ -38,8 +43,12 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			loss_mean += loss.mean()
 			loss.backward()
 			optimizer.step()
+			
+			print(time.time()-start_time)
+			print("############################")
 
 			batch_count += 1
+			start_time = time.time()
 		print(loss_mean/batch_count)
 
 	
@@ -75,8 +84,8 @@ if __name__=="__main__":
 
 	valid_ids = np.random.choice(len(dataset),int(len(dataset)*valid_ratio))
 	train_ids = np.setdiff1d(np.arange(len(dataset)),valid_ids)
-	print(train_ids.shape)
-	print(valid_ids.shape)
+	# print(train_ids.shape)
+	# print(valid_ids.shape)
 
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
