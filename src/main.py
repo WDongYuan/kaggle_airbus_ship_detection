@@ -4,6 +4,7 @@ import os
 import torch
 import tqdm
 import torch.nn as nn
+import torch.optim as optim
 from skimage.io import imread
 import matplotlib.pyplot as plt
 import matplotlib
