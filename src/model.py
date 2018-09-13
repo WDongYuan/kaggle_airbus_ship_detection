@@ -62,8 +62,8 @@ class UNET(nn.Module):
         img_down4 = self.d_block4(img_down3)
         img_down5 = self.d_block5(img_down4)
         
-        print(img_down5.size())
-        print(img_down4.size())
+        # print(img_down5.size())
+        # print(img_down4.size())
         img_up1 = self.u_block1(img_down5,img_down4)
 #         print(img_up1.size())
 #         print(img_down3.size())
