@@ -39,10 +39,10 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			# print(log_prob.size())
 			# print(sample_batch["weight_img"].size())
 			# log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
-			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
+			loss = loss_func(log_prob,sample_batch["weight_img"].long().cuda())
 			# loss_mean = loss.mean()
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
-				sample_batch["label_img"]),(batch_count+1)*batch_size),end="\n", flush=True)
+				sample_batch["weight_img"]),(batch_count+1)*batch_size),end="\n", flush=True)
 			loss.backward()
 			optimizer.step()
 
