@@ -102,7 +102,7 @@ if __name__=="__main__":
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
 
 	model = UNET()
-	optimizer = optim.Adam(model.parameters(),lr = 0.00001)
+	optimizer = optim.Adam(model.parameters(),lr = 0.001)
 	TrainModel(model,
 		optimizer,
 		train_dataloader,
