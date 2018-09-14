@@ -21,14 +21,15 @@ from util import *
 def ModelPredict(model,valid_dataloader):
 	print("Making prediction...")
 	model.eval()
-	for i_batch, sample_batch in enumerate(valid_dataloader):
-		log_prob = model(sample_batch["img"].cuda())
-		predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-		save_arr_as_img(predict_label[0],"./test_dir/predict_"+str(i_batch)+".png")
-		print(i_batch, end=" ")
-		# if i_batch>50:
-		# 	return
-		return
+	with torch.no_grad(): 
+		for i_batch, sample_batch in enumerate(valid_dataloader):
+			log_prob = model(sample_batch["img"].cuda())
+			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
+			save_arr_as_img(predict_label[0],"./test_dir/predict_"+str(i_batch)+".png")
+			print(i_batch, end=" ")
+			if i_batch>50:
+				return
+			return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
