@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.nn.init import kaiming_uniform
+from torch.nn.init import kaiming_uniform_
 
 class DownBlock(nn.Module):
     def __init__(self, in_ch, out_ch, max_pool_flag=True):
@@ -22,8 +22,8 @@ class DownBlock(nn.Module):
         tmp_img = self.relu(self.conv2(tmp_img))
         return tmp_img
     def conv_init(self,layer,lower=-1,upper=1):
-        kaiming_uniform(layer.weight)
-        kaiming_uniform(layer.bias)
+        kaiming_uniform_(layer.weight)
+        kaiming_uniform_(layer.bias)
 
 class UpBlock(nn.Module):
     def __init__(self, in_ch, out_ch, pre_ch):
@@ -45,10 +45,10 @@ class UpBlock(nn.Module):
         tmp_img = self.relu(self.conv2(tmp_img))
         tmp_img = self.relu(self.conv3(tmp_img))
         return tmp_img
-        
+
     def conv_init(self,layer,lower=-1,upper=1):
-        kaiming_uniform(layer.weight)
-        kaiming_uniform(layer.bias)
+        kaiming_uniform_(layer.weight)
+        kaiming_uniform_(layer.bias)
         
         
 class UNET(nn.Module):
