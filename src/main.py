@@ -45,7 +45,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			# loss_mean = loss.mean()
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
-				sample_batch["label_img"]),(batch_count+1)*batch_size),end="\n", flush=True)
+				sample_batch["label_img"].numpy()),(batch_count+1)*batch_size),end="\n", flush=True)
 			
 			# save_arr_as_img(np.argmax(log_prob.data.cpu().numpy()[0],axis=0),"./test_dir/prob_"+str(batch_count)+".png")
 			# save_arr_as_img(sample_batch["weight_img"].numpy()[0],"./test_dir/label_"+str(batch_count)+".png")
