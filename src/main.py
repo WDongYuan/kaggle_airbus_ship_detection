@@ -55,11 +55,13 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 				param_group['lr'] = lr
 			print("############################")
 
+			if batch_count%100==0:
+				torch.save(model,"./saved_model/model_"+str(batch_count))
 			batch_count += 1
 			# if batch_count>=20:
 			# 	return
 			# start_time = time.time()
-		print(loss_mean/batch_count)
+		# print(loss_mean/batch_count)
 
 	
 if __name__=="__main__":
