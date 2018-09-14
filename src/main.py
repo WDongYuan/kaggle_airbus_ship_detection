@@ -25,9 +25,12 @@ def ModelPredict(model,valid_dataloader):
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-			save_arr_as_img(predict_label[0],"./test_dir/predict_"+str(i_batch)+".png")
-			print(i_batch, end=" ")
-			if i_batch>50:
+
+			for i_img in range(batch_size):
+				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_img)+"_"+str(i_batch)+".png")
+				save_arr_as_img(sample_batch["label_img"].numpy(),"./test_dir/predict_"+str(i_img)+"_"+str(i_batch)+"_true.png")
+			print(i_batch, end=" ", flush=True)
+			if i_batch>2:
 				return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
