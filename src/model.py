@@ -10,7 +10,7 @@ class DownBlock(nn.Module):
         self.maxpool = nn.MaxPool2d(3,stride=2,padding=1)
         self.max_pool_flag = max_pool_flag
         self.relu = nn.ReLU()
-        self.bn = nn.BatchNorm2d(1)
+        self.bn = nn.BatchNorm2d(out_ch)
 
         self.conv_init(self.conv1)
         self.conv_init(self.conv2)
@@ -34,7 +34,7 @@ class UpBlock(nn.Module):
         self.conv2 = nn.Conv2d(in_ch,out_ch,3,padding=1)
         self.conv3 = nn.Conv2d(out_ch,out_ch,3,padding=1)
         self.relu = nn.ReLU()
-        self.bn = nn.BatchNorm2d(1)
+        self.bn = nn.BatchNorm2d(out_ch)
 
         self.conv_init(self.conv1)
         self.conv_init(self.conv2)
