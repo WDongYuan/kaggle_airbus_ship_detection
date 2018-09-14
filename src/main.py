@@ -28,7 +28,7 @@ def ModelPredict(model,valid_dataloader):
 
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
-				save_arr_as_img(sample_batch["label_img"].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
+				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 			print(i_batch, end=" ", flush=True)
 			if i_batch>2:
 				return
