@@ -18,6 +18,12 @@ import time
 from data_processing import *
 from model import *
 from util import *
+def ModelPredict(model,valid_dataloader):
+	print("Making prediction...")
+	model.eval()
+	for i_batch, sample_batch in enumerate(valid_dataloader):
+		model(sample_batch["img"].cuda())
+		return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
@@ -102,17 +108,20 @@ if __name__=="__main__":
 
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
-
-	model = UNET()
-	optimizer = optim.Adam(model.parameters(),lr = learning_rate)
-	TrainModel(model,
-		optimizer,
-		train_dataloader,
-		valid_dataloader,
-		decay_step = 0,
-		decay_rate = 0,
-		total_epoch = 10,
-		lr = learning_rate)
+	if train_flag:
+		model = UNET()
+		optimizer = optim.Adam(model.parameters(),lr = learning_rate)
+		TrainModel(model,
+			optimizer,
+			train_dataloader,
+			valid_dataloader,
+			decay_step = 0,
+			decay_rate = 0,
+			total_epoch = 10,
+			lr = learning_rate)
+	else:
+		model = torch.load(saved_model)
+		ModelPredict(model,valid_dataloader)
 
 	# counter = 0
 	# for i_batch, sample_batch in enumerate(train_dataloader):

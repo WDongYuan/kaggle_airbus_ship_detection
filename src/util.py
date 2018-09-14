@@ -4,3 +4,5 @@ test_img_dir = "../data/test"
 valid_ratio = 0.2
 batch_size = 20
 learning_rate = 0.01
+train_flag = False
+saved_model = "./saved_model/model_1100"
