@@ -79,7 +79,8 @@ class ImageData:
     def __getitem__(self, idx):
 #         tmp_img = imread(self.img_dir+self.img_list[idx])
         tmp_img = Image.open(self.img_dir+self.img_list[idx])
-        rnd_num = np.random.randint(0,len(self.transform_list))
+        if self.transform_list is not None:
+            rnd_num = np.random.randint(0,len(self.transform_list))
 #         rnd_num = 5
         if self.transform_list is not None:
             tmp_img = self.transform_list[rnd_num](tmp_img)
