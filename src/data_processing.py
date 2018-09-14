@@ -4,7 +4,7 @@ from torchvision import transforms, utils
 from PIL import Image
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import time
-
+import matplotlib
 
 # rle encode and decode
 
@@ -70,8 +70,8 @@ class ImageData:
         w_img[1:h,0:w-1] += img[0:h-1,1:w] #up right
         w_img[0:h-1:,1:w] += img[1:h,0:w-1] #down left
         
-        w_img = np.multiply(8-w_img,img)
-        w_img[np.nonzero(w_img)] = 1
+        w_img = np.multiply(20-w_img,img)+1
+        #w_img[np.nonzero(w_img)] = 1
         return w_img
     
     def __len__(self):
@@ -104,10 +104,16 @@ def rotate_image(angle):
     return func
 
 def classify_accuracy(prob,true_label,dim=1):
+    #print(prob.shape)
     pred_label = np.argmax(prob,axis=dim)
+    print(pred_label.sum())
+    #print(pred_label.shape)
     tp = np.multiply(pred_label,true_label)
+    print(tp.sum())
+    print(true_label.sum())
     return float(tp.sum())/true_label.sum()
 
-
+def save_arr_as_img(img_as_arr,path):
+     matplotlib.image.imsave(path,img_as_arr)
 
 

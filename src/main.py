@@ -36,13 +36,19 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 
 			optimizer.zero_grad()
 			log_prob = model(sample_batch["img"].cuda())
+			#print(log_prob.size())
+			#print(sample_batch["weight_img"].size())
+			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			# print(log_prob.size())
 			# print(sample_batch["weight_img"].size())
 			# log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
-			loss = loss_func(log_prob,sample_batch["weight_img"].long().cuda())
+			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			# loss_mean = loss.mean()
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
 				sample_batch["weight_img"]),(batch_count+1)*batch_size),end="\n", flush=True)
+			
+			save_arr_as_img(np.argmax(log_prob.data.cpu().numpy()[0],axis=0),"./test_dir/prob_"+str(batch_count)+".png")
+			save_arr_as_img(sample_batch["weight_img"].numpy()[0],"./test_dir/label_"+str(batch_count)+".png")
 			loss.backward()
 			optimizer.step()
 
@@ -50,6 +56,8 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			# print("############################")
 
 			batch_count += 1
+			if batch_count>=20:
+				return
 			# start_time = time.time()
 		print(loss_mean/batch_count)
 
@@ -82,8 +90,8 @@ if __name__=="__main__":
 
 
 
-	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
-	# dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=None)
+	#dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
+	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=None)
 
 	valid_ids = np.random.choice(len(dataset),int(len(dataset)*valid_ratio))
 	train_ids = np.setdiff1d(np.arange(len(dataset)),valid_ids)
