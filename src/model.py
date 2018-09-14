@@ -56,7 +56,7 @@ class UpBlock(nn.Module):
 class UNET(nn.Module):
     def __init__(self):
         super(UNET, self).__init__()
-        self.base_ch = 1
+        self.base_ch = 4
         self.d_block1 = DownBlock(3,self.base_ch,False)
         self.d_block2 = DownBlock(self.base_ch,self.base_ch*2,True)
         self.d_block3 = DownBlock(self.base_ch*2,self.base_ch*4,True)
