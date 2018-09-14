@@ -70,7 +70,7 @@ class ImageData:
         w_img[1:h,0:w-1] += img[0:h-1,1:w] #up right
         w_img[0:h-1:,1:w] += img[1:h,0:w-1] #down left
         
-        w_img = np.multiply(100-w_img,img)+1
+        w_img = np.multiply(50-w_img,img)+1
         #w_img[np.nonzero(w_img)] = 1
         return w_img
     
@@ -111,7 +111,8 @@ def classify_accuracy(prob,true_label,dim=1):
     tp = np.multiply(pred_label,true_label)
     print(tp.sum())
     print(true_label.sum())
-    return float(tp.sum())/true_label.sum()
+    print(tp.sum()/true_label.sum())
+    return tp.sum()/true_label.sum()
 
 def save_arr_as_img(img_as_arr,path):
      matplotlib.image.imsave(path,img_as_arr)
