@@ -22,7 +22,9 @@ def ModelPredict(model,valid_dataloader):
 	print("Making prediction...")
 	model.eval()
 	for i_batch, sample_batch in enumerate(valid_dataloader):
-		model(sample_batch["img"].cuda())
+		log_prob = model(sample_batch["img"].cuda())
+		predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
+		save_arr_as_img(predict_label[0],"./test_dir/predict_"+str(i_batch)+".png")
 		return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
