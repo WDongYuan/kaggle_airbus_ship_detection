@@ -70,7 +70,7 @@ class ImageData:
         w_img[1:h,0:w-1] += img[0:h-1,1:w] #up right
         w_img[0:h-1:,1:w] += img[1:h,0:w-1] #down left
         
-        w_img = np.multiply(1000-w_img,img)+1
+        w_img = np.multiply(500-w_img,img)+1
         #w_img[np.nonzero(w_img)] = 1
         return w_img
     
