@@ -27,8 +27,8 @@ def ModelPredict(model,valid_dataloader):
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
 
 			for i_img in range(batch_size):
-				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_img)+"_"+str(i_batch)+".png")
-				save_arr_as_img(sample_batch["label_img"].numpy(),"./test_dir/predict_"+str(i_img)+"_"+str(i_batch)+"_true.png")
+				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
+				save_arr_as_img(sample_batch["label_img"].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 			print(i_batch, end=" ", flush=True)
 			if i_batch>2:
 				return
