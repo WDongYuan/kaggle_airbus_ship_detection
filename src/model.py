@@ -10,6 +10,7 @@ class DownBlock(nn.Module):
         self.maxpool = nn.MaxPool2d(3,stride=2,padding=1)
         self.max_pool_flag = max_pool_flag
         self.relu = nn.ReLU()
+        self.bn = nn.BatchNorm2d(1)
 
         self.conv_init(self.conv1)
         self.conv_init(self.conv2)
@@ -18,8 +19,8 @@ class DownBlock(nn.Module):
         tmp_img = img
         if self.max_pool_flag:
             tmp_img = self.maxpool(tmp_img)
-        tmp_img = self.relu(self.conv1(tmp_img))
-        tmp_img = self.relu(self.conv2(tmp_img))
+        tmp_img = self.relu(self.bn(self.conv1(tmp_img)))
+        tmp_img = self.relu(self.bn(self.conv2(tmp_img)))
         return tmp_img
     def conv_init(self,layer,lower=-1,upper=1):
         kaiming_uniform_(layer.weight)
@@ -33,6 +34,7 @@ class UpBlock(nn.Module):
         self.conv2 = nn.Conv2d(in_ch,out_ch,3,padding=1)
         self.conv3 = nn.Conv2d(out_ch,out_ch,3,padding=1)
         self.relu = nn.ReLU()
+        self.bn = nn.BatchNorm2d(1)
 
         self.conv_init(self.conv1)
         self.conv_init(self.conv2)
@@ -40,10 +42,10 @@ class UpBlock(nn.Module):
     
     def forward(self, img, pre_feat):
         tmp_img = self.upsample(img)
-        tmp_img = self.relu(self.conv1(tmp_img))
+        tmp_img = self.relu(self.bn(self.conv1(tmp_img)))
         tmp_img = torch.cat((tmp_img,pre_feat),dim=1)
-        tmp_img = self.relu(self.conv2(tmp_img))
-        tmp_img = self.relu(self.conv3(tmp_img))
+        tmp_img = self.relu(self.bn(self.conv2(tmp_img)))
+        tmp_img = self.relu(self.bn(self.conv3(tmp_img)))
         return tmp_img
 
     def conv_init(self,layer,lower=-1,upper=1):
@@ -54,7 +56,7 @@ class UpBlock(nn.Module):
 class UNET(nn.Module):
     def __init__(self):
         super(UNET, self).__init__()
-        self.base_ch = 1
+        self.base_ch = 16
         self.d_block1 = DownBlock(3,self.base_ch,False)
         self.d_block2 = DownBlock(self.base_ch,self.base_ch*2,True)
         self.d_block3 = DownBlock(self.base_ch*2,self.base_ch*4,True)
