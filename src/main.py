@@ -26,8 +26,9 @@ def ModelPredict(model,valid_dataloader):
 		predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
 		save_arr_as_img(predict_label[0],"./test_dir/predict_"+str(i_batch)+".png")
 		print(i_batch, end=" ")
-		if i_batch>50:
-			return
+		# if i_batch>50:
+		# 	return
+		return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
