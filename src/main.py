@@ -53,7 +53,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			optimizer.step()
 
 			# print(time.time()-start_time)
-			# print("############################")
+			print("############################")
 
 			batch_count += 1
 			# if batch_count>=20:
