@@ -19,7 +19,7 @@ from data_processing import *
 from model import *
 from util import *
 
-def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch):
+def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
 	model.cuda()
 
@@ -50,6 +50,9 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			optimizer.step()
 
 			# print(time.time()-start_time)
+			lr *= 0.995
+			for param_group in optimizer.param_groups:
+				param_group['lr'] = lr
 			print("############################")
 
 			batch_count += 1
@@ -99,14 +102,15 @@ if __name__=="__main__":
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
 
 	model = UNET()
-	optimizer = optim.Adam(model.parameters(),lr = 0.01)
+	optimizer = optim.Adam(model.parameters(),lr = learning_rate)
 	TrainModel(model,
 		optimizer,
 		train_dataloader,
 		valid_dataloader,
 		decay_step = 0,
 		decay_rate = 0,
-		total_epoch = 10)
+		total_epoch = 10,
+		lr = learning_rate)
 
 	# counter = 0
 	# for i_batch, sample_batch in enumerate(train_dataloader):
