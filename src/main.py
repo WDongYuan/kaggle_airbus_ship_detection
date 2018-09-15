@@ -32,7 +32,7 @@ def ModelPredict(model,valid_dataloader):
 
 				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
 			print(i_batch, end=" ", flush=True)
-			if i_batch>2:
+			if i_batch>5:
 				return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
