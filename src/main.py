@@ -70,9 +70,10 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 				param_group['lr'] = lr
 
 			if i_batch%200==0:
-				print("saving model...")
-				torch.save(model,"./saved_model/model_"+str(i_batch))
+				print("saving model to ./saved_model/model_"+str(i_batch)+"_"+str(int(time.time()%100000)))
+				torch.save(model,"./saved_model/model_"+str(i_batch)+"_"+str(int(time.time()%100000)))
 
+			if i_batch%50==0:
 				print("validating model...")
 				model.eval()
 				for i in range(2):
@@ -123,7 +124,7 @@ if __name__=="__main__":
 
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
-	if train_flag:
+	if model_flag == "train":
 		model = UNET()
 		optimizer = optim.Adam(model.parameters(),lr = learning_rate)
 		TrainModel(model,
@@ -134,6 +135,17 @@ if __name__=="__main__":
 			decay_rate = decay_rate,
 			total_epoch = 10,
 			lr = learning_rate)
+	elif model_flag == "continue_train":
+		model = torch.load(saved_model)
+		optimizer = optim.Adam(model.parameters(),lr = continue_train_learning_rate)
+		TrainModel(model,
+			optimizer,
+			train_dataloader,
+			valid_dataloader,
+			decay_step = 0,
+			decay_rate = decay_rate,
+			total_epoch = 10,
+			lr = continue_train_learning_rate)
 	else:
 		model = torch.load(saved_model)
 		ModelPredict(model,valid_dataloader)
