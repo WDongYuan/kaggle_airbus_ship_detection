@@ -75,12 +75,12 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 
 			if i_batch%50==0:
 				print("validating model...")
-				model.eval()
+				# model.eval()
 				for i in range(5):
 					valid_batch = next(valid_iter)
 					valid_prob = model(valid_batch["img"].cuda())
 					classify_accuracy(valid_prob.data.cpu().numpy(),valid_batch["label_img"].numpy())
-				model.train()
+				# model.train()
 
 			print("############################")
 
