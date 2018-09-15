@@ -29,16 +29,17 @@ def ModelPredict(model,valid_dataloader):
 			print(sample_batch["weight_img"].size())
 			wi = sample_batch["weight_img"].data.cpu().numpy()
 			print(log_prob.size())
-			
+
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-			for i_img in range(batch_size):
-				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
-				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
+			print(predict_label.size())
+			# for i_img in range(batch_size):
+			# 	save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
+			# 	save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 
-				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
+			# 	save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
 			
 			#print(i_batch, end=" ", flush=True)
 			if i_batch>=0:
