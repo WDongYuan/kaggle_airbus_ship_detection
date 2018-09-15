@@ -29,7 +29,7 @@ def ModelPredict(model,valid_dataloader):
 			print(sample_batch["weight_img"].size())
 			wi = sample_batch["weight_img"].data.cpu().numpy()
 			print(wi[np.where(wi<0)])
-			print(log_prob.size())
+			print(wi.min())
 
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
