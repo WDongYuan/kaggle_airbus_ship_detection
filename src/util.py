@@ -10,5 +10,5 @@ img_split_parts = 9
 weight_ratio = 5
 
 
-model_flag = "train"
+model_flag = "predict"
 continue_train_learning_rate = 0.00005

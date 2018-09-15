@@ -25,9 +25,10 @@ def ModelPredict(model,valid_dataloader):
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
+			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
+			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
+
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-			
-			
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
 				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
