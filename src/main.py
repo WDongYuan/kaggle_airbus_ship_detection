@@ -20,7 +20,7 @@ from model import *
 from util import *
 def ModelPredict(model,valid_dataloader):
 	print("Making prediction...")
-	#model.eval()
+	model.eval()
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
