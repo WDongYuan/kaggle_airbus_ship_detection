@@ -5,7 +5,7 @@ valid_ratio = 0.2
 batch_size = 20
 learning_rate = 0.0001
 decay_rate = 0.999
-saved_model = "./saved_model/model_400_51269"
+saved_model = "./saved_model/model_0_51866"
 img_split_parts = 9
 weight_ratio = 5
 
