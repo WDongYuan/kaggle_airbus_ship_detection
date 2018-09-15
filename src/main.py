@@ -40,18 +40,15 @@ def ModelPredict(model,valid_dataloader):
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
+	valid_iter = iter(valid_dataloader)
+
 	model.cuda()
 
 	loss_func = nn.NLLLoss()
 	for epoch in range(total_epoch):
-		print("##################################")
 		print("epoch "+str(epoch))
-		loss_mean = 0
-		batch_count = 0
-		# start_time = time.time()
+
 		for i_batch, sample_batch in enumerate(train_dataloader):
-			# print(time.time()-start_time)
-			# start_time = time.time()
 
 			optimizer.zero_grad()
 			log_prob = model(sample_batch["img"].cuda())
@@ -59,7 +56,6 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			#print(sample_batch["weight_img"].size())
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
-			# loss_mean = loss.mean()
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
 				sample_batch["label_img"].numpy()),(batch_count+1)*batch_size),end="\n", flush=True)
 			
@@ -72,15 +68,21 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			lr *= decay_rate
 			for param_group in optimizer.param_groups:
 				param_group['lr'] = lr
+
+			if i_batch%200==0:
+				print("saving model...")
+				torch.save(model,"./saved_model/model_"+str(i_batch))
+
+				print("validating model...")
+				model.eval()
+				for i in range(2):
+					valid_batch = next(valid_iter)
+					valid_prob = model(valid_batch["img"].cuda())
+					classify_accuracy(valid_prob.data.cpu().numpy(),valid_batch["label_img"].numpy())
+				model.train()
+
 			print("############################")
 
-			if batch_count%200==0:
-				torch.save(model,"./saved_model/model_"+str(batch_count))
-			batch_count += 1
-			# if batch_count>=20:
-			# 	return
-			# start_time = time.time()
-		# print(loss_mean/batch_count)
 
 	
 if __name__=="__main__":

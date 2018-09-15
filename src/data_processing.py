@@ -128,12 +128,9 @@ def rotate_image(angle):
     return func
 
 def classify_accuracy(prob,true_label,dim=1):
-    #print(prob.shape)
     pred_label = np.argmax(prob,axis=dim)
-    #print(pred_label.shape)
     tp = np.multiply(pred_label,true_label)
-    print("precision: %f"%(tp.sum()/pred_label.sum()))
-    # print(true_label.sum())
+    print("precision: %f"%(tp.sum()/pred_label.sum()), end=" | ")
     print("recall: %f"%(tp.sum()/true_label.sum()))
     return tp.sum()/true_label.sum()
 
