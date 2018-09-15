@@ -130,9 +130,9 @@ def rotate_image(angle):
 def classify_accuracy(prob,true_label,dim=1):
     pred_label = np.argmax(prob,axis=dim)
     tp = np.multiply(pred_label,true_label)
-    print("precision: %f"%(tp.sum()/pred_label.sum()), end=" | ")
-    print("recall: %f"%(tp.sum()/true_label.sum()))
-    return tp.sum()/true_label.sum()
+    print("precision: %f"%(tp.sum()/(pred_label.sum()+1)), end=" | ")
+    print("recall: %f"%(tp.sum()/(true_label.sum()+1)))
+    return tp.sum()/(true_label.sum()+1)
 
 def save_arr_as_img(img_as_arr,path):
      matplotlib.image.imsave(path,img_as_arr)

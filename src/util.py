@@ -5,9 +5,9 @@ valid_ratio = 0.2
 batch_size = 20
 learning_rate = 0.0001
 decay_rate = 0.999
-saved_model = "./saved_model/model_600"
+saved_model = "./saved_model/model_400_51269"
 img_split_parts = 9
-weight_ratio = 10
+weight_ratio = 5
 
 
 model_flag = "predict"
