@@ -26,13 +26,13 @@ def ModelPredict(model,valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 
-			print(sample_batch["weight_img"].size())
-			wi = sample_batch["weight_img"].data.cpu().numpy()
-			print(wi[np.where(wi<0)])
-			print(wi.min())
+			# print(sample_batch["weight_img"].size())
+			# wi = sample_batch["weight_img"].data.cpu().numpy()
+			# print(wi[np.where(wi<0)])
+			# print(wi.min())
 
-			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
-			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
+			# log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
+			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
 			print(predict_label.shape)

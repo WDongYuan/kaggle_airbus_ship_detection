@@ -7,8 +7,8 @@ learning_rate = 0.0001
 decay_rate = 0.999
 saved_model = "./saved_model/model_0_51866"
 img_split_parts = 9
-weight_ratio = 5
+weight_ratio = 15 # must larger than 8
 
 
-model_flag = "predict"
+model_flag = "train"
 continue_train_learning_rate = 0.00005
