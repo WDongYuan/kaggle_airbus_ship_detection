@@ -71,7 +71,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 				param_group['lr'] = lr
 			print("############################")
 
-			if batch_count%100==0:
+			if batch_count%200==0:
 				torch.save(model,"./saved_model/model_"+str(batch_count))
 			batch_count += 1
 			# if batch_count>=20:
