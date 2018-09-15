@@ -8,3 +8,4 @@ train_flag = True
 decay_rate = 0.999
 saved_model = "./saved_model/model_1100"
 img_split_parts = 9
+weight_ratio = 20
