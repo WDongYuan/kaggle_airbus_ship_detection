@@ -57,7 +57,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
-				sample_batch["label_img"].numpy()),(batch_count+1)*batch_size),end="\n", flush=True)
+				sample_batch["label_img"].numpy()),(i_batch+1)*batch_size),end="\n", flush=True)
 			
 			# save_arr_as_img(np.argmax(log_prob.data.cpu().numpy()[0],axis=0),"./test_dir/prob_"+str(batch_count)+".png")
 			# save_arr_as_img(sample_batch["weight_img"].numpy()[0],"./test_dir/label_"+str(batch_count)+".png")
