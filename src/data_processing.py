@@ -77,7 +77,8 @@ class ImageData:
 
     def get_img_part(self,img,r,c,parts,i):
         num = int(np.sqrt(parts))
-        return img[int(i/num)*(r/num):(int(i/num)+1)*(r/num),(i%num)*(c/num):(i%num+1)*(c/num)]
+        return img[int(i/num)*int((r/num)):(int(i/num)+1)*int((r/num)),
+            (i%num)*int((c/num)):(i%num+1)*int((c/num))]
 
     def crop_img(self,img,label_img,parts):
         num = np.sqrt(parts)
