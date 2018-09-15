@@ -5,4 +5,5 @@ valid_ratio = 0.2
 batch_size = 5
 learning_rate = 0.01
 train_flag = True
+decay_rate = 0.999
 saved_model = "./saved_model/model_1100"

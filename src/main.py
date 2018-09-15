@@ -66,7 +66,7 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			optimizer.step()
 
 			# print(time.time()-start_time)
-			lr *= 0.995
+			lr *= decay_rate
 			for param_group in optimizer.param_groups:
 				param_group['lr'] = lr
 			print("############################")
