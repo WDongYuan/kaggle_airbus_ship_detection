@@ -25,6 +25,7 @@ def ModelPredict(model,valid_dataloader):
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
+			print(sample_batch["weight_img"].size())
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 
@@ -36,7 +37,7 @@ def ModelPredict(model,valid_dataloader):
 				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
 			
 			#print(i_batch, end=" ", flush=True)
-			if i_batch>=2:
+			if i_batch>=0:
 				return
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
