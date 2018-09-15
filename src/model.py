@@ -62,8 +62,10 @@ class UNET(nn.Module):
         self.d_block3 = DownBlock(self.base_ch*2,self.base_ch*4,True)
         self.d_block4 = DownBlock(self.base_ch*4,self.base_ch*8,True)
         self.d_block5 = DownBlock(self.base_ch*8,self.base_ch*16,True)
+        self.d_block6 = DownBlock(self.base_ch*16,self.base_ch*32,True)
         
         
+        self.u_block0 = UpBlock(self.base_ch*32,self.base_ch*16,self.base_ch*16)
         self.u_block1 = UpBlock(self.base_ch*16,self.base_ch*8,self.base_ch*8)
         self.u_block2 = UpBlock(self.base_ch*8,self.base_ch*4,self.base_ch*4)
         self.u_block3 = UpBlock(self.base_ch*4,self.base_ch*2,self.base_ch*2)
@@ -78,12 +80,10 @@ class UNET(nn.Module):
         img_down3 = self.d_block3(img_down2)
         img_down4 = self.d_block4(img_down3)
         img_down5 = self.d_block5(img_down4)
+        img_down6 = self.d_block5(img_down5)
         
-        # print(img_down5.size())
-        # print(img_down4.size())
-        img_up1 = self.u_block1(img_down5,img_down4)
-#         print(img_up1.size())
-#         print(img_down3.size())
+        img_up0 = self.u_block1(img_down6,img_down5)
+        img_up1 = self.u_block1(img_up0,img_down4)
         img_up2 = self.u_block2(img_up1,img_down3)
         img_up3 = self.u_block3(img_up2,img_down2)
         img_up4 = self.u_block4(img_up3,img_down1)
