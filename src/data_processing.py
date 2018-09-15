@@ -100,7 +100,8 @@ class ImageData:
         rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
         label_img = masks_as_image(rle_0)[:,:,0]
 
-        tmp_img,label_img = self.crop_img(tmp_img,label_img,img_split_parts)
+        tmp_img,label_img = self.crop_img(np.array(tmp_img),label_img,img_split_parts)
+        tmp_img = Image.fromarray(tmp_img)
 
         if self.transform_list is not None:
             rnd_num = np.random.randint(0,len(self.transform_list))
