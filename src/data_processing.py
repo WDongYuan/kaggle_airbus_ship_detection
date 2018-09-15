@@ -5,6 +5,7 @@ from PIL import Image
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import time
 import matplotlib
+from util import *
 
 # rle encode and decode
 
@@ -73,25 +74,43 @@ class ImageData:
         w_img = np.multiply(200-w_img,img)+1
         #w_img[np.nonzero(w_img)] = 1
         return w_img
+
+    def get_img_part(self,img,r,c,parts,i):
+        return img[int(i/num)*(r/num):(int(i/num)+1)*(r/num),(i%num)*(c/num):(i%num+1)*(c/num)]
+
+    def crop_img(self,img,label_img,parts):
+        num = np.sqrt(parts)
+        r,c = label_img.shape
+        max_idx = 0
+        max_val = 0
+        for i in range(parts):
+            tmp_img = self.get_img_part(label_img,r,c,i)
+            if max_val<tmp_img.sum():
+                max_val = tmp_img.sum()
+                max_idx = i
+        return self.get_img_part(img,r,c,parts,max_idx),self.get_img_part(label_img,r,c,parts,max_idx)
+
+
     
     def __len__(self):
         return len(self.img_list)
     def __getitem__(self, idx):
-#         tmp_img = imread(self.img_dir+self.img_list[idx])
         tmp_img = Image.open(self.img_dir+self.img_list[idx])
+        rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
+        label_img = masks_as_image(rle_0)[:,:,0]
+        
+        tmp_img,label_img = self.crop_img(tmp_img,label_img,img_split_parts)
+
         if self.transform_list is not None:
             rnd_num = np.random.randint(0,len(self.transform_list))
-#         rnd_num = 5
         if self.transform_list is not None:
             tmp_img = self.transform_list[rnd_num](tmp_img)
         tmp_img = transforms.functional.to_tensor(tmp_img)
         
-        rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
-        label_img = masks_as_image(rle_0)[:,:,0]
+        
         if self.label_transform_list is not None:
             label_img = self.label_transform_list[rnd_num](label_img)
         w_label_img = self.WeightLabelImg(label_img)
-#         label_img = transforms.functional.to_tensor(label_img)
         
         return {"img_name": self.img_list[idx], "img": tmp_img, "label_img": label_img, "weight_img": w_label_img}
 def change_brightness(factor):
