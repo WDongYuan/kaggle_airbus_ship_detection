@@ -80,7 +80,7 @@ class UNET(nn.Module):
         img_down3 = self.d_block3(img_down2)
         img_down4 = self.d_block4(img_down3)
         img_down5 = self.d_block5(img_down4)
-        img_down6 = self.d_block5(img_down5)
+        img_down6 = self.d_block6(img_down5)
         
         img_up0 = self.u_block1(img_down6,img_down5)
         img_up1 = self.u_block1(img_up0,img_down4)
