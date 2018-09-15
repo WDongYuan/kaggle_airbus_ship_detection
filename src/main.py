@@ -28,6 +28,7 @@ def ModelPredict(model,valid_dataloader):
 
 			print(sample_batch["weight_img"].size())
 			wi = sample_batch["weight_img"].data.cpu().numpy()
+			print(np.where(wi<0))
 			print(log_prob.size())
 
 			log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
