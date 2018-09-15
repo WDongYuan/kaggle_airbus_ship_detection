@@ -76,6 +76,7 @@ class ImageData:
         return w_img
 
     def get_img_part(self,img,r,c,parts,i):
+        num = int(np.sqrt(parts))
         return img[int(i/num)*(r/num):(int(i/num)+1)*(r/num),(i%num)*(c/num):(i%num+1)*(c/num)]
 
     def crop_img(self,img,label_img,parts):
@@ -84,7 +85,7 @@ class ImageData:
         max_idx = 0
         max_val = 0
         for i in range(parts):
-            tmp_img = self.get_img_part(label_img,r,c,i)
+            tmp_img = self.get_img_part(label_img,r,c,parts,i)
             if max_val<tmp_img.sum():
                 max_val = tmp_img.sum()
                 max_idx = i
@@ -98,7 +99,7 @@ class ImageData:
         tmp_img = Image.open(self.img_dir+self.img_list[idx])
         rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
         label_img = masks_as_image(rle_0)[:,:,0]
-        
+
         tmp_img,label_img = self.crop_img(tmp_img,label_img,img_split_parts)
 
         if self.transform_list is not None:
