@@ -126,7 +126,7 @@ if __name__=="__main__":
 			train_dataloader,
 			valid_dataloader,
 			decay_step = 0,
-			decay_rate = 0,
+			decay_rate = decay_rate,
 			total_epoch = 10,
 			lr = learning_rate)
 	else:
