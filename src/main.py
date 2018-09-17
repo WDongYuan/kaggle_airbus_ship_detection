@@ -14,6 +14,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms, utils
 from PIL import Image
 import time
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 
 from data_processing import *
 from model import *
@@ -25,17 +26,7 @@ def ModelPredict(model,valid_dataloader):
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
-
-			# print(sample_batch["weight_img"].size())
-			# wi = sample_batch["weight_img"].data.cpu().numpy()
-			# print(wi[np.where(wi<0)])
-			# print(wi.min())
-
-			# log_prob = torch.mul(log_prob,sample_batch["weight_img"].unsqueeze(1).float().cuda())
-			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
-
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-			# print(predict_label.shape)
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
 				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
@@ -45,6 +36,37 @@ def ModelPredict(model,valid_dataloader):
 			#print(i_batch, end=" ", flush=True)
 			if i_batch>=2:
 				return
+
+def ModelTest(model,test_dataloader):
+	print("Making prediction...")
+	model.eval()
+	pred_file = []
+	with torch.no_grad(): 
+		for i_batch, sample_batch in enumerate(test_dataloader):
+
+			b,sub,c,h,w = (0,0,0,0)
+			if img_split_parts>1:
+				b,sub,c,h,w = sample_batch["img"].size()
+				sample_batch["img"] = sample.batch["img"].view(b*sub,c,h,w)
+			log_prob = model(sample_batch["img"].cuda())
+			log_prob = log_prob.data.cpu().numpy()
+			predict_label = np.argmax(log_prob,axis=1)
+			if img_split_parts>1:
+				predict_label = predict_label.reshape(b,sub,h,w)
+				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
+				predict_label = np.array(img_list)
+			for i in range(batch_size):
+				img_rle = rle_encode(predict_label[i])
+				img_rle = img_rle if len(img_rle)>0 else None
+				pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
+				
+	submission_df = pd.DataFrame(out_pred_rows)[['ImageId', 'EncodedPixels']]
+	submission_df.to_csv('submission.csv', index=False)
+	submission_df.sample(10)
+
+
+				
+			
 
 def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,decay_rate, total_epoch, lr):
 
@@ -66,13 +88,10 @@ def TrainModel(model, optimizer, train_dataloader, valid_dataloader, decay_step,
 			loss = loss_func(log_prob,sample_batch["label_img"].long().cuda())
 			print("%f,%f,%d"%(loss.mean().data.cpu().numpy(),classify_accuracy(log_prob.data.cpu().numpy(),
 				sample_batch["label_img"].numpy()),(i_batch+1)*batch_size),end="\n", flush=True)
-			
-			# save_arr_as_img(np.argmax(log_prob.data.cpu().numpy()[0],axis=0),"./test_dir/prob_"+str(batch_count)+".png")
-			# save_arr_as_img(sample_batch["weight_img"].numpy()[0],"./test_dir/label_"+str(batch_count)+".png")
+
 			loss.backward()
 			optimizer.step()
 
-			# print(time.time()-start_time)
 			lr *= decay_rate
 			for param_group in optimizer.param_groups:
 				param_group['lr'] = lr
@@ -132,6 +151,7 @@ if __name__=="__main__":
 
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
+
 	if model_flag == "train":
 		model = UNET()
 		optimizer = optim.Adam(model.parameters(),lr = learning_rate)
@@ -154,9 +174,17 @@ if __name__=="__main__":
 			decay_rate = decay_rate,
 			total_epoch = 10,
 			lr = continue_train_learning_rate)
-	else:
+
+	## This is a prediction process for only the selected part (the part with the most labeled pixels) of a image
+	elif model_flag == "predict":
 		model = torch.load(saved_model)
 		ModelPredict(model,valid_dataloader)
+
+	elif model_flag == "test":
+		test_dataset = ImageData(train_img_dir)
+		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=False, num_workers=0)
+		model = torch.load(saved_model)
+		ModelTest(model,test_dataloader)
 
 	# counter = 0
 	# for i_batch, sample_batch in enumerate(train_dataloader):

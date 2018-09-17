@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from torchvision import transforms, utils
+import torch
 from PIL import Image
 import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import time
@@ -92,8 +93,6 @@ class ImageData:
                 max_val = tmp_img.sum()
                 max_idx = i
         return self.get_img_part(img,r,c,parts,max_idx),self.get_img_part(label_img,r,c,parts,max_idx)
-
-
     
     def __len__(self):
         return len(self.img_list)
@@ -117,6 +116,38 @@ class ImageData:
         w_label_img = self.WeightLabelImg(label_img)
         
         return {"img_name": self.img_list[idx], "img": tmp_img, "label_img": label_img, "weight_img": w_label_img}
+
+class TestImageData:
+    def __init__(self, img_dir):
+        self.img_dir = img_dir
+        self.img_list = os.listdir(img_dir)
+
+    def get_img_part(self,img,r,c,parts,i):
+        num = int(np.sqrt(parts))
+        return img[int(i/num)*int((r/num)):(int(i/num)+1)*int((r/num)),
+            (i%num)*int((c/num)):(i%num+1)*int((c/num))]
+
+    def crop_img(self,img,parts):
+        num = np.sqrt(parts)
+        r,c = img.shape
+        sub_imgs = []
+        for i in range(parts):
+            tmp_img = self.get_img_part(img,r,c,parts,i)
+            sub_imgs.append(tmp_img)
+        sub_imgs = np.array(sub_imgs)
+        return sub_imgs
+    
+    def __len__(self):
+        return len(self.img_list)
+    def __getitem__(self, idx):
+        tmp_img = Image.open(self.img_dir+self.img_list[idx])
+        if img_split_parts==1:
+            tmp_img = transforms.functional.to_tensor(tmp_img)
+        else:
+            tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
+            tmp_img = torch.from_numpy(tmp_img).transpose(0,3,1,2)
+        return {"img_name": self.img_list[idx], "img": tmp_img}
+
 def change_brightness(factor):
     def func(img):
         return transforms.functional.adjust_brightness(img, factor)
@@ -137,6 +168,10 @@ def classify_accuracy(prob,true_label,dim=1):
 def save_arr_as_img(img_as_arr,path):
      matplotlib.image.imsave(path,img_as_arr)
 
-
+def combine_image_parts(imgs):
+    parts,h,w = imgs.shape
+    base = int(np.sqrt(parts))
+    new_img = np.vstack([np.hstack([imgs[r*base+c] for c in range(base)]) for r in range(base)])
+    return new_img
 
 
