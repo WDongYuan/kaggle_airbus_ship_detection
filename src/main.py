@@ -46,11 +46,8 @@ def ModelTest(model,test_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(test_dataloader):
 
-			b,sub,c,h,w = (0,0,0,0,0)
-			if img_split_parts>1:
-				b,sub,c,h,w = sample_batch["img"].size()
-				print(sample_batch["img"].size())
-				sample_batch["img"] = sample_batch["img"].view(b*sub,c,h,w)
+			b,c,h,w = sample_batch["img"].size()
+			print(sample_batch["img"].size())
 			# print(sample_batch["img"].size())
 			# return
 			log_prob = model(sample_batch["img"].cuda())
@@ -60,12 +57,12 @@ def ModelTest(model,test_dataloader):
 
 			# predict_label = sample_batch["img"].numpy().sum(axis=1)/3
 			print(predict_label.shape)
-			print(sorted([predict_label[i].sum()/256/256 for i in range(180)]))
+			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
 			return
-			if img_split_parts>1:
-				predict_label = predict_label.reshape(b,sub,h,w)
-				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
-				predict_label = np.array(img_list)
+
+			ori_img = combine_image_parts(predict_label)
+			predict_label = np.array(ori_img)
+			
 			for i in range(batch_size):
 				# img_rle = rle_encode(predict_label[i])
 				# img_rle = img_rle if len(img_rle)>0 else None
@@ -170,7 +167,7 @@ if __name__=="__main__":
 
 
 	test_dataset = TestImageData(test_img_dir)
-	test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True, num_workers=0)
+	test_dataloader = DataLoader(test_dataset, batch_size = 1, shuffle=True, num_workers=0)
 
 	if model_flag == "train":
 		model = UNET()
