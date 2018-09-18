@@ -168,7 +168,7 @@ if __name__=="__main__":
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
 
 
-	test_dataset = TestImageData(test_img_dir)
+	test_dataset = TestImageData(train_img_dir)
 	test_dataloader = DataLoader(test_dataset, batch_size = 1, shuffle=True, num_workers=0)
 
 	if model_flag == "train":
