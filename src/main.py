@@ -63,6 +63,7 @@ def ModelTest(model,test_dataloader):
 				predict_label = predict_label.reshape(b,sub,c,h,w)
 				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
 				predict_label = np.array(img_list)
+				print(predict_label.shape)
 			for i in range(batch_size):
 				# img_rle = rle_encode(predict_label[i])
 				# img_rle = img_rle if len(img_rle)>0 else None
