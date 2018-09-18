@@ -151,8 +151,8 @@ class TestImageData:
             # tmp_img = Image.fromarray(tmp_img)
             # tmp_img = transforms.functional.to_tensor(tmp_img)
             tmp_img = torch.from_numpy(tmp_img)
-            print(tmp_img.size())
-            assert 1==2
+            # print(tmp_img.size())
+            # assert 1==2
 
             # tmp_img = self.get_img_part(np.array(tmp_img),768,768,img_split_parts,5)
             # print(tmp_img)
