@@ -147,6 +147,7 @@ class TestImageData:
         else:
             tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
             tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2)
+            print(tmp_img)
         return {"img_name": self.img_list[idx], "img": tmp_img}
 
 def change_brightness(factor):
