@@ -47,6 +47,7 @@ def ModelTest(model,test_dataloader):
 			b,sub,c,h,w = (0,0,0,0,0)
 			if img_split_parts>1:
 				b,sub,c,h,w = sample_batch["img"].size()
+				print(sample_batch["img"].size())
 				sample_batch["img"] = sample_batch["img"].view(b*sub,c,h,w)
 			print(sample_batch["img"][0])
 			return
