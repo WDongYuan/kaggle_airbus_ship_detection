@@ -29,10 +29,10 @@ def ModelPredict(model,valid_dataloader):
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
 			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
-			return
+			# return
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
-				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
+				# save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 
 				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
 			
