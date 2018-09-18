@@ -59,6 +59,8 @@ def ModelTest(model,test_dataloader):
 				img_rle = rle_encode(predict_label[i])
 				img_rle = img_rle if len(img_rle)>0 else None
 				pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
+
+			break
 				
 	submission_df = pd.DataFrame(out_pred_rows)[['ImageId', 'EncodedPixels']]
 	submission_df.to_csv('submission.csv', index=False)
