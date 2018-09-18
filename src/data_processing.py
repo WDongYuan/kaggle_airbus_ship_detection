@@ -151,7 +151,7 @@ class TestImageData:
             # # tmp_img = transforms.functional.to_tensor(tmp_img)
             # tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2).float()
 
-            tmp_img = self.get_img_part(tmp_img,768,768,img_split_parts,5)
+            tmp_img = self.get_img_part(np.array(tmp_img),768,768,img_split_parts,5)
             tmp_img = Image.fromarray(tmp_img)
             tmp_img = transforms.functional.to_tensor(tmp_img)
             tmp_img = tmp_img.unsqueeze(0).expand(9,-1,-1,-1)
