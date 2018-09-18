@@ -129,7 +129,8 @@ class TestImageData:
 
     def crop_img(self,img,parts):
         num = np.sqrt(parts)
-        #print(img.shape)
+        print(img.shape)
+        assert 1==2
         r,c,_ = img.shape
         sub_imgs = []
         for i in range(parts):
