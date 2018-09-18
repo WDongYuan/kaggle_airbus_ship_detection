@@ -48,6 +48,8 @@ def ModelTest(model,test_dataloader):
 			if img_split_parts>1:
 				b,sub,c,h,w = sample_batch["img"].size()
 				sample_batch["img"] = sample_batch["img"].view(b*sub,c,h,w)
+			print(sample_batch["img"][0])
+			return
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
