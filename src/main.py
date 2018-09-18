@@ -51,6 +51,8 @@ def ModelTest(model,test_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
+			print(predict_label.size())
+			return
 			# if img_split_parts>1:
 			# 	predict_label = predict_label.reshape(b,sub,h,w)
 			# 	img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
@@ -187,7 +189,7 @@ if __name__=="__main__":
 	elif model_flag == "test":
 		test_dataset = TestImageData(test_img_dir)
 		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=False, num_workers=0)
-		
+
 		model = torch.load(saved_model)
 		ModelTest(model,test_dataloader)
 
