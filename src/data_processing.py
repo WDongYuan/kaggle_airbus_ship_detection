@@ -171,7 +171,7 @@ def save_arr_as_img(img_as_arr,path):
      matplotlib.image.imsave(path,img_as_arr)
 
 def combine_image_parts(imgs):
-    parts,h,w = imgs.shape
+    parts,_,h,w = imgs.shape
     base = int(np.sqrt(parts))
     new_img = np.vstack([np.hstack([imgs[r*base+c] for c in range(base)]) for r in range(base)])
     return new_img
