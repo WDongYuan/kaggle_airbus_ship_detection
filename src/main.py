@@ -46,8 +46,8 @@ def ModelTest(model,test_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(test_dataloader):
 
-			b,c,h,w = sample_batch["img"].size()
 			print(sample_batch["img"].size())
+			b,c,h,w = sample_batch["img"].size()
 			# print(sample_batch["img"].size())
 			# return
 			log_prob = model(sample_batch["img"].cuda())
