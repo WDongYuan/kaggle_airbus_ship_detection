@@ -27,7 +27,7 @@ def ModelPredict(model,valid_dataloader):
 			sample_batch["img"] = sample_batch["img"].squeeze()
 			log_prob = model(sample_batch["img"].cuda())
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
-			# predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
+			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
 			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
 			return
 			for i_img in range(batch_size):
