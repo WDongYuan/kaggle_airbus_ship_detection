@@ -49,25 +49,27 @@ def ModelTest(model,test_dataloader):
 				b,sub,c,h,w = sample_batch["img"].size()
 				print(sample_batch["img"].size())
 				sample_batch["img"] = sample_batch["img"].view(b*sub,c,h,w)
-			print(sample_batch["img"].size())
-			return
+			# print(sample_batch["img"].size())
+			# return
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
-			print(predict_label.shape)
-			print(predict_label.sum()/180/256/256)
-			return
-			# if img_split_parts>1:
-			# 	predict_label = predict_label.reshape(b,sub,h,w)
-			# 	img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
-			# 	predict_label = np.array(img_list)
+			
+			predict_label = sample_batch["img"].numpy()
+			# print(predict_label.shape)
+			# print(predict_label.sum()/180/256/256)
+			# return
+			if img_split_parts>1:
+				predict_label = predict_label.reshape(b,sub,h,w)
+				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
+				predict_label = np.array(img_list)
 			for i in range(batch_size):
 				img_rle = rle_encode(predict_label[i])
 				img_rle = img_rle if len(img_rle)>0 else None
 				pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
 
 				save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
-				save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
+				# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
 			break
 				
 	submission_df = pd.DataFrame(pred_file)[['ImageId', 'EncodedPixels']]
