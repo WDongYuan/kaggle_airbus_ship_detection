@@ -142,12 +142,13 @@ class TestImageData:
         return len(self.img_list)
     def __getitem__(self, idx):
         tmp_img = Image.open(self.img_dir+self.img_list[idx])
+        ori_img = transforms.functional.to_tensor(tmp_img)
         if img_split_parts==1:
             tmp_img = transforms.functional.to_tensor(tmp_img)
         else:
             tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
             tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2).float()
-        return {"img_name": self.img_list[idx], "img": tmp_img}
+        return {"img_name": self.img_list[idx], "img": tmp_img, "ori_img": ori_img}
 
 def change_brightness(factor):
     def func(img):
