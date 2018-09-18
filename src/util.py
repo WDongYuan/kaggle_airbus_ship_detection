@@ -5,10 +5,10 @@ valid_ratio = 0.2
 batch_size = 20
 learning_rate = 0.0001
 decay_rate = 0.999
-saved_model = "./saved_model/"
+saved_model = "./saved_model/model_200_49425"
 img_split_parts = 9
 weight_ratio = 15 # must larger than 8
 
 
-model_flag = "train"
+model_flag = "test"
 continue_train_learning_rate = 0.00005
