@@ -25,8 +25,10 @@ def ModelPredict(model,valid_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
-			classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
-			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
+			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
+			# predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
+			print(sorted([predict_label[i].sum()/256/256 for i in range(180)]))
+			return
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
 				save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
@@ -166,6 +168,10 @@ if __name__=="__main__":
 	train_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(train_ids))
 	valid_dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0, sampler=SubsetRandomSampler(valid_ids))
 
+
+	test_dataset = TestImageData(test_img_dir)
+	test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True, num_workers=0)
+
 	if model_flag == "train":
 		model = UNET()
 		optimizer = optim.Adam(model.parameters(),lr = learning_rate)
@@ -192,12 +198,9 @@ if __name__=="__main__":
 	## This is a prediction process for only the selected part (the part with the most labeled pixels) of a image
 	elif model_flag == "predict":
 		model = torch.load(saved_model)
-		ModelPredict(model,valid_dataloader)
+		ModelPredict(model,test_dataloader)
 
 	elif model_flag == "test":
-		test_dataset = TestImageData(train_img_dir)
-		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True, num_workers=0)
-
 		model = torch.load(saved_model)
 		ModelTest(model,test_dataloader)
 
