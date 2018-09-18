@@ -129,7 +129,8 @@ class TestImageData:
 
     def crop_img(self,img,parts):
         num = np.sqrt(parts)
-        r,c = img.shape
+        #print(img.shape)
+        r,c,_ = img.shape
         sub_imgs = []
         for i in range(parts):
             tmp_img = self.get_img_part(img,r,c,parts,i)
@@ -145,7 +146,7 @@ class TestImageData:
             tmp_img = transforms.functional.to_tensor(tmp_img)
         else:
             tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
-            tmp_img = torch.from_numpy(tmp_img).transpose(0,3,1,2)
+            tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2)
         return {"img_name": self.img_list[idx], "img": tmp_img}
 
 def change_brightness(factor):

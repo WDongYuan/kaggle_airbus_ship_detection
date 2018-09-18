@@ -44,10 +44,10 @@ def ModelTest(model,test_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(test_dataloader):
 
-			b,sub,c,h,w = (0,0,0,0)
+			b,sub,c,h,w = (0,0,0,0,0)
 			if img_split_parts>1:
 				b,sub,c,h,w = sample_batch["img"].size()
-				sample_batch["img"] = sample.batch["img"].view(b*sub,c,h,w)
+				sample_batch["img"] = sample_batch["img"].view(b*sub,c,h,w)
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
@@ -181,7 +181,7 @@ if __name__=="__main__":
 		ModelPredict(model,valid_dataloader)
 
 	elif model_flag == "test":
-		test_dataset = ImageData(train_img_dir)
+		test_dataset = TestImageData(test_img_dir)
 		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=False, num_workers=0)
 		model = torch.load(saved_model)
 		ModelTest(model,test_dataloader)
