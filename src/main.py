@@ -59,7 +59,7 @@ def ModelTest(model,test_dataloader):
 			# predict_label = sample_batch["img"].numpy().sum(axis=1)/3
 			print(predict_label.shape)
 			print(predict_label.sum()/180/256/256)
-			# return
+			return
 			if img_split_parts>1:
 				predict_label = predict_label.reshape(b,sub,h,w)
 				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
