@@ -200,7 +200,7 @@ if __name__=="__main__":
 	## This is a prediction process for only the selected part (the part with the most labeled pixels) of a image
 	elif model_flag == "predict":
 		model = torch.load(saved_model)
-		ModelPredict(model,test_dataloader)
+		ModelPredict(model,valid_dataloader)
 
 	elif model_flag == "test":
 		model = torch.load(saved_model)
