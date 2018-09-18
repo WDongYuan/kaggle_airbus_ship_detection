@@ -31,7 +31,7 @@ def ModelPredict(model,valid_dataloader):
 			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
 			# return
 			for i_img in range(predict_label.shape[0]):
-				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
+				# save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
 				# save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 
 				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
