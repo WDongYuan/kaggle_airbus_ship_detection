@@ -24,7 +24,7 @@ def ModelPredict(model,valid_dataloader):
 	model.eval()
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(valid_dataloader):
-			sample_batch["img"] = sample_batch["img"].squeeze().int()
+			sample_batch["img"] = sample_batch["img"].squeeze()
 			log_prob = model(sample_batch["img"].cuda())
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
@@ -156,8 +156,8 @@ if __name__=="__main__":
 
 
 
-	# dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
-	dataset = ImageData(train_img_dir, train_label_file, transform_list=None, label_transform_list=None)
+	dataset = ImageData(train_img_dir, train_label_file, transform_list=transform_list, label_transform_list=label_transform_list)
+	# dataset = ImageData(train_img_dir, train_label_file, transform_list=None, label_transform_list=None)
 
 	valid_ids = np.random.choice(len(dataset),int(len(dataset)*valid_ratio))
 	train_ids = np.setdiff1d(np.arange(len(dataset)),valid_ids)
