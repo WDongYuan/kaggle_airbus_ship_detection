@@ -54,19 +54,19 @@ def ModelTest(model,test_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
-			
+
 			predict_label = sample_batch["img"].numpy()
 			# print(predict_label.shape)
 			# print(predict_label.sum()/180/256/256)
 			# return
 			if img_split_parts>1:
-				predict_label = predict_label.reshape(b,sub,h,w)
+				predict_label = predict_label.reshape(b,sub,c,h,w)
 				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
 				predict_label = np.array(img_list)
 			for i in range(batch_size):
-				img_rle = rle_encode(predict_label[i])
-				img_rle = img_rle if len(img_rle)>0 else None
-				pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
+				# img_rle = rle_encode(predict_label[i])
+				# img_rle = img_rle if len(img_rle)>0 else None
+				# pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
 
 				save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
 				# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
