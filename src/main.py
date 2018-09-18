@@ -27,7 +27,7 @@ def ModelPredict(model,valid_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 			# predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
-			print(sorted([predict_label[i].sum()/256/256 for i in range(180)]))
+			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
 			return
 			for i_img in range(batch_size):
 				save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
@@ -200,7 +200,7 @@ if __name__=="__main__":
 
 	elif model_flag == "test":
 		model = torch.load(saved_model)
-		ModelTest(model,train_dataloader)
+		ModelTest(model,test_dataloader)
 
 	# counter = 0
 	# for i_batch, sample_batch in enumerate(train_dataloader):
