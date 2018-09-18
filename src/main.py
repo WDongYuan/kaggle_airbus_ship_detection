@@ -24,7 +24,7 @@ def ModelPredict(model,valid_dataloader):
 	model.eval()
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(valid_dataloader):
-			sample_batch["img"] = sample_batch["img"].squeeze()
+			sample_batch["img"] = sample_batch["img"].squeeze().int()
 			log_prob = model(sample_batch["img"].cuda())
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
