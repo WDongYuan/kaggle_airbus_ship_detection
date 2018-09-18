@@ -129,8 +129,8 @@ class TestImageData:
 
     def crop_img(self,img,parts):
         num = np.sqrt(parts)
-        print(img.shape)
-        assert 1==2
+        # print(img.shape)
+        # assert 1==2
         r,c,_ = img.shape
         sub_imgs = []
         for i in range(parts):
@@ -147,15 +147,17 @@ class TestImageData:
         if img_split_parts==1:
             tmp_img = transforms.functional.to_tensor(tmp_img)
         else:
-            tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
-            # tmp_img = Image.fromarray(tmp_img)
-            # tmp_img = transforms.functional.to_tensor(tmp_img)
-            tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2).float()
+            # tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
+            # # tmp_img = Image.fromarray(tmp_img)
+            # # tmp_img = transforms.functional.to_tensor(tmp_img)
+            # tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2).float()
 
-            # tmp_img = self.get_img_part(np.array(tmp_img),768,768,img_split_parts,5)
-            # tmp_img = Image.fromarray(tmp_img)
-            # tmp_img = transforms.functional.to_tensor(tmp_img)
-            # tmp_img = tmp_img.unsqueeze(0).expand(9,-1,-1,-1)
+            tmp_img = self.get_img_part(np.array(tmp_img),768,768,img_split_parts,5)
+            tmp_img = Image.fromarray(tmp_img)
+            tmp_img = transforms.functional.to_tensor(tmp_img)
+            print(tmp_img)
+            assert 1==2
+            tmp_img = tmp_img.unsqueeze(0).expand(9,-1,-1,-1)
 
         return {"img_name": self.img_list[idx], "img": tmp_img, "ori_img": ori_img}
 
