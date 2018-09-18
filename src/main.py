@@ -62,7 +62,7 @@ def ModelTest(model,test_dataloader):
 
 			break
 				
-	submission_df = pd.DataFrame(out_pred_rows)[['ImageId', 'EncodedPixels']]
+	submission_df = pd.DataFrame(pred_file)[['ImageId', 'EncodedPixels']]
 	submission_df.to_csv('submission.csv', index=False)
 	submission_df.sample(10)
 
