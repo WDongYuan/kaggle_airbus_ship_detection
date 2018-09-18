@@ -51,10 +51,10 @@ def ModelTest(model,test_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
-			if img_split_parts>1:
-				predict_label = predict_label.reshape(b,sub,h,w)
-				img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
-				predict_label = np.array(img_list)
+			# if img_split_parts>1:
+			# 	predict_label = predict_label.reshape(b,sub,h,w)
+			# 	img_list = [combine_image_parts(predict_label[i]) for i in range(b)]
+			# 	predict_label = np.array(img_list)
 			for i in range(batch_size):
 				img_rle = rle_encode(predict_label[i])
 				img_rle = img_rle if len(img_rle)>0 else None
