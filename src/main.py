@@ -46,6 +46,7 @@ def ModelTest(model,test_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(test_dataloader):
 
+			sample_batch["img"] = sample_batch["img"].squeeze()
 			print(sample_batch["img"].size())
 			b,c,h,w = sample_batch["img"].size()
 			# print(sample_batch["img"].size())
@@ -62,7 +63,7 @@ def ModelTest(model,test_dataloader):
 
 			ori_img = combine_image_parts(predict_label)
 			predict_label = np.array(ori_img)
-			
+
 			for i in range(batch_size):
 				# img_rle = rle_encode(predict_label[i])
 				# img_rle = img_rle if len(img_rle)>0 else None
