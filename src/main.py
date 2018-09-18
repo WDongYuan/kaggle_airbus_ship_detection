@@ -68,7 +68,8 @@ def ModelTest(model,test_dataloader):
 				# img_rle = img_rle if len(img_rle)>0 else None
 				# pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
 
-				save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
+				# save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
+				save_arr_as_img(np.transpose(predict_label[i],(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
 				# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
 			break
 				
