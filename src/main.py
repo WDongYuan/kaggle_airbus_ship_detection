@@ -196,7 +196,7 @@ if __name__=="__main__":
 
 	elif model_flag == "test":
 		test_dataset = TestImageData(train_img_dir)
-		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=False, num_workers=0)
+		test_dataloader = DataLoader(test_dataset, batch_size = batch_size, shuffle=True, num_workers=0)
 
 		model = torch.load(saved_model)
 		ModelTest(model,test_dataloader)
