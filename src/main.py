@@ -25,7 +25,6 @@ def ModelPredict(model,valid_dataloader):
 	with torch.no_grad(): 
 		for i_batch, sample_batch in enumerate(valid_dataloader):
 			sample_batch["img"] = sample_batch["img"].squeeze()
-			print(sample_batch["img"][0,:,:,0])
 			log_prob = model(sample_batch["img"].cuda())
 			# classify_accuracy(log_prob.data.cpu().numpy(),sample_batch["label_img"].numpy())
 			predict_label = np.argmax(log_prob.data.cpu().numpy(),axis=1)
@@ -35,7 +34,7 @@ def ModelPredict(model,valid_dataloader):
 				# save_arr_as_img(predict_label[i_img],"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+".png")
 				# save_arr_as_img(sample_batch["label_img"][i_img].numpy(),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true.png")
 
-				save_arr_as_img(np.transpose(sample_batch["img"][i_img].numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
+				save_arr_as_img(np.transpose(sample_batch["img"][i_img].int().numpy(),(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i_img)+"_true_img.png")
 			
 			#print(i_batch, end=" ", flush=True)
 			if i_batch>=2:
