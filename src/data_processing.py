@@ -135,7 +135,7 @@ class TestImageData:
         sub_imgs = []
         for i in range(parts):
             tmp_img = self.get_img_part(img,r,c,parts,i)
-            sub_imgs.append(tmp_img)
+            sub_imgs.append(transforms.functional.to_tensor(tmp_img).numpy())
         sub_imgs = np.array(sub_imgs)
         return sub_imgs
     
@@ -150,8 +150,8 @@ class TestImageData:
             tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
             # tmp_img = Image.fromarray(tmp_img)
             # tmp_img = transforms.functional.to_tensor(tmp_img)
-            tmp_img = transforms.functional.to_tensor(tmp_img)
-            print(tmp_img.size())
+            tmp_img = torch.from_numpy(tmp_img)
+            print(tmp.size())
             assert 1==2
 
             # tmp_img = self.get_img_part(np.array(tmp_img),768,768,img_split_parts,5)
