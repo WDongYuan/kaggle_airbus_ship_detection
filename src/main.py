@@ -51,7 +51,7 @@ def ModelTest(model,test_dataloader):
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
 			predict_label = np.argmax(log_prob,axis=1)
-			print(predict_label.size())
+			print(predict_label.shape)
 			return
 			# if img_split_parts>1:
 			# 	predict_label = predict_label.reshape(b,sub,h,w)
