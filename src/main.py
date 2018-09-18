@@ -204,7 +204,7 @@ if __name__=="__main__":
 
 	elif model_flag == "test":
 		model = torch.load(saved_model)
-		ModelTest(model,valid_dataloader)
+		ModelTest(model,test_dataloader)
 
 	# counter = 0
 	# for i_batch, sample_batch in enumerate(train_dataloader):
