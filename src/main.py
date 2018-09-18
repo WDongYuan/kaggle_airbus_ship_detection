@@ -53,11 +53,12 @@ def ModelTest(model,test_dataloader):
 			# return
 			log_prob = model(sample_batch["img"].cuda())
 			log_prob = log_prob.data.cpu().numpy()
+			print(log_prob.shape)
 			predict_label = np.argmax(log_prob,axis=1)
 
-			predict_label = sample_batch["img"].numpy().sum(axis=1)/3
-			# print(predict_label.shape)
-			# print(predict_label.sum()/180/256/256)
+			# predict_label = sample_batch["img"].numpy().sum(axis=1)/3
+			print(predict_label.shape)
+			print(predict_label.sum()/180/256/256)
 			# return
 			if img_split_parts>1:
 				predict_label = predict_label.reshape(b,sub,h,w)
@@ -73,9 +74,9 @@ def ModelTest(model,test_dataloader):
 				# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
 			break
 				
-	submission_df = pd.DataFrame(pred_file)[['ImageId', 'EncodedPixels']]
-	submission_df.to_csv('submission.csv', index=False)
-	submission_df.sample(10)
+	# submission_df = pd.DataFrame(pred_file)[['ImageId', 'EncodedPixels']]
+	# submission_df.to_csv('submission.csv', index=False)
+	# submission_df.sample(10)
 
 
 				
