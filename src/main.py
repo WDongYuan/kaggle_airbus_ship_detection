@@ -60,20 +60,23 @@ def ModelTest(model,test_dataloader):
 			# predict_label = sample_batch["img"].numpy().sum(axis=1)/3
 			print(predict_label.shape)
 			print(sorted([predict_label[i].sum()/256/256 for i in range(9)]))
-			return
+			# return
 
 			ori_img = combine_image_parts(predict_label)
 			predict_label = np.array(ori_img)
 
-			for i in range(batch_size):
-				# img_rle = rle_encode(predict_label[i])
-				# img_rle = img_rle if len(img_rle)>0 else None
-				# pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
+			# for i in range(batch_size):
+			# 	# img_rle = rle_encode(predict_label[i])
+			# 	# img_rle = img_rle if len(img_rle)>0 else None
+			# 	# pred_file += [{'ImageId': sample_batch["img_name"][i], 'EncodedPixels': img_rle}]
 
-				save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
-				# save_arr_as_img(np.transpose(predict_label[i],(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
-				# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
-			break
+			# 	save_arr_as_img(predict_label[i],"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
+			# 	# save_arr_as_img(np.transpose(predict_label[i],(1,2,0)),"./test_dir/predict_"+str(i_batch)+"_"+str(i)+".png")
+			# 	# save_arr_as_img(np.transpose(sample_batch["ori_img"][i].numpy(),(1,2,0)),"./test_dir/predict_img_"+str(i_batch)+"_"+str(i)+"_ori.png")
+			# break
+
+			if i_batch>=20:
+				break
 				
 	# submission_df = pd.DataFrame(pred_file)[['ImageId', 'EncodedPixels']]
 	# submission_df.to_csv('submission.csv', index=False)
