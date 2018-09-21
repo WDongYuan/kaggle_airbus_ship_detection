@@ -7,6 +7,7 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import time
 import matplotlib
 from util import *
+import math
 
 # rle encode and decode
 
@@ -54,9 +55,10 @@ def masks_as_image(in_mask_list):
 class ImageData:
     def __init__(self, img_dir, label_file, transform_list=None, label_transform_list=None):
         self.img_dir = img_dir
-        self.img_list = os.listdir(img_dir)
+#         self.img_list = os.listdir(img_dir)
         self.label_file = label_file
         self.label = pd.read_csv(label_file)
+        self.img_list = self.label["ImageId"]
         self.transform_list = transform_list
         self.label_transform_list = label_transform_list
     def WeightLabelImg(self,img):
@@ -97,8 +99,11 @@ class ImageData:
     def __len__(self):
         return len(self.img_list)
     def __getitem__(self, idx):
-        tmp_img = Image.open(self.img_dir+self.img_list[idx])
-        rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
+#         tmp_img = Image.open(self.img_dir+self.img_list[idx])
+#         rle_0 = self.label.query('ImageId=="'+self.img_list[idx]+'"')['EncodedPixels']
+        tmp_img_name = self.img_list[idx]
+        tmp_img = Image.open(self.img_dir+tmp_img_name)
+        rle_0 = self.label.query('ImageId=="'+tmp_img_name+'"')['EncodedPixels']
         label_img = masks_as_image(rle_0)[:,:,0]
 
         tmp_img,label_img = self.crop_img(np.array(tmp_img),label_img,img_split_parts)
@@ -135,7 +140,7 @@ class TestImageData:
         sub_imgs = []
         for i in range(parts):
             tmp_img = self.get_img_part(img,r,c,parts,i)
-            sub_imgs.append(transforms.functional.to_tensor(tmp_img).numpy())
+            sub_imgs.append(tmp_img)
         sub_imgs = np.array(sub_imgs)
         return sub_imgs
     
@@ -147,10 +152,10 @@ class TestImageData:
         if img_split_parts==1:
             tmp_img = transforms.functional.to_tensor(tmp_img)
         else:
-            tmp_img = self.crop_img(np.array(tmp_img),img_split_parts)
+            tmp_img = self.crop_img(np.array(tmp_img),img_split_parts).astype(float)/255
             # tmp_img = Image.fromarray(tmp_img)
             # tmp_img = transforms.functional.to_tensor(tmp_img)
-            tmp_img = torch.from_numpy(tmp_img)
+            tmp_img = torch.from_numpy(tmp_img).permute(0,3,1,2)
             # print(tmp_img.size())
             # assert 1==2
 
@@ -180,7 +185,7 @@ def classify_accuracy(prob,true_label,dim=1):
     tp = np.multiply(pred_label,true_label)
     print("precision: %f"%(tp.sum()/(pred_label.sum()+1)), end=" | ")
     print("recall: %f"%(tp.sum()/(true_label.sum()+1)))
-    return tp.sum()/(true_label.sum()+1)
+#     return tp.sum()/(true_label.sum()+1)
 
 def save_arr_as_img(img_as_arr,path):
      matplotlib.image.imsave(path,img_as_arr)
@@ -191,4 +196,35 @@ def combine_image_parts(imgs):
     new_img = np.vstack([np.hstack([imgs[r*base+c] for c in range(base)]) for r in range(base)])
     return new_img
 
+def data_exploration(train_dir,label_file):
+    label = pd.read_csv(label_file)
+    ships = label['EncodedPixels']
+    noship = 0
+    hasship = 0
+    for i in range(ships.shape[0]):
+        if isinstance(ships[i],float):
+            noship += 1
+        else:
+            hasship += 1
+    print("%d,%d"%(hasship,noship))
 
+def drop_no_ship_img(label_file,new_label_file,drop_rate):
+    label = pd.read_csv(label_file)
+    row,col = label.shape
+    ships = label['EncodedPixels']
+    id_list = []
+    noship = 0
+    hasship = 0
+    for i in range(row):
+        if isinstance(ships[i],str):
+            hasship += 1
+            id_list.append(i)
+        elif np.random.rand()>drop_rate:
+            noship += 1
+            id_list.append(i)
+            
+    print("Images with ships: %d. Images without ship: %d."%(hasship,noship))
+    new_label = label.iloc[id_list]
+    new_label.to_csv(new_label_file, index=False)
+    
+            
